@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Abstractions;
@@ -36,11 +35,9 @@ public sealed class JwtProvider : IJwtProvider
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-        var jwtResponse = new JwtResponse
+        return new JwtResponse
         {
             AccessToken = accessToken
         };
-
-        return jwtResponse;
     }
 }

@@ -31,14 +31,14 @@ public sealed class JwtProvider : IJwtProvider
                 new(ClaimTypes.NameIdentifier, request.UserName)
             },
             signingCredentials: new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.Default.GetBytes(_jwtSettings.Key)),
+                _jwtSettings.SymmetricSecurityKey,
                 SecurityAlgorithms.HmacSha256));
 
-        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
         var jwtResponse = new JwtResponse
         {
-            AccessToken = encodedJwt
+            AccessToken = accessToken
         };
 
         return jwtResponse;

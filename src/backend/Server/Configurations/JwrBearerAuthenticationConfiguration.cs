@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 // ReSharper disable once CheckNamespace
@@ -10,7 +9,6 @@ public static class JwrBearerAuthenticationConfiguration
     public static IServiceCollection AddJwrBearerAuthentication(this IServiceCollection services,
         JwtSettings jwtSettings)
     {
-        var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
         services
             .AddAuthentication(options =>
             {
@@ -23,7 +21,7 @@ public static class JwrBearerAuthenticationConfiguration
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    IssuerSigningKey = jwtSettings.SymmetricSecurityKey,
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience
                 };

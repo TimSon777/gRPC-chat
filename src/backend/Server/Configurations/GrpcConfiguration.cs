@@ -8,7 +8,6 @@ public static class GrpcConfiguration
     public static WebApplication MapGrpcServices(this WebApplication app)
     {
         app.MapGrpcService<ChatService>();
-        app.MapGrpcService<GreeterService>();
         app.MapGrpcService<AuthService>();
         return app;
     }

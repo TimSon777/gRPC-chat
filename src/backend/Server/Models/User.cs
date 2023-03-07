@@ -7,14 +7,9 @@ public sealed class User : IEquatable<User>
     public required string UserName { get; init; }
     private ConcurrentQueue<(string UserName, string Text)> ReceivedMessages { get; init; } = new();
 
-    public void ReceiveMessage(string userName, string text)
+    public void ReceiveMessage(User from, string text)
     {
-        ReceivedMessages.Enqueue((userName, text));
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return ReferenceEquals(this, obj) || obj is User other && Equals(other);
+        ReceivedMessages.Enqueue((from.UserName, text));
     }
 
     public IEnumerable<(string UserName, string Text)> GetMessages()
@@ -23,6 +18,11 @@ public sealed class User : IEquatable<User>
         {
             yield return message;
         }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || obj is User other && Equals(other);
     }
     
     public bool Equals(User? other)

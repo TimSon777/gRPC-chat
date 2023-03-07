@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Proto;
 using Server.Abstractions;
@@ -18,7 +17,12 @@ public sealed class ChatService : Chat.ChatBase
 
     public override async Task<ConnectResponse> Connect(Empty request, ServerCallContext context)
     {
-        var user = GetUser(context);
+        var userName = context.UserName();
+
+        var user = new User
+        {
+            UserName = userName
+        };
 
         var connected = await _chatMediator.TryConnectUserAsync(user);
 
@@ -30,7 +34,8 @@ public sealed class ChatService : Chat.ChatBase
 
     public override async Task<Empty> SendMessage(SendMessageRequest request, ServerCallContext context)
     {
-        var user = GetUser(context);
+        var userName = context.UserName();
+        var user = await _chatMediator.GetUserByNameAsync(userName);
         
         await _chatMediator.SaveMessageToUsersAsync(user, request.Text);
         
@@ -39,9 +44,15 @@ public sealed class ChatService : Chat.ChatBase
 
     public override async Task ReceiveMessages(Empty request, IServerStreamWriter<ReceiveMessageResponse> responseStream, ServerCallContext context)
     {
-        var user = GetUser(context);
+        var userName = context.UserName();
+        var user = await _chatMediator.GetUserByNameAsync(userName);
 
-        await _chatMediator.SubscribeToReceiveMessages(user, responseStream);
+        var subscribed = await _chatMediator.SubscribeToReceiveMessages(user, responseStream);
+
+        if (!subscribed)
+        {
+            throw new RpcException(Status.DefaultCancelled);
+        }
 
         try
         {
@@ -55,15 +66,5 @@ public sealed class ChatService : Chat.ChatBase
         {
             await _chatMediator.DisconnectUserAsync(user);
         }
-    }
-
-    private static User GetUser(ServerCallContext context)
-    {
-        var httpContext = context.GetHttpContext();
-        
-        return new User
-        {
-            UserName = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Unknown"
-        };
     }
 }

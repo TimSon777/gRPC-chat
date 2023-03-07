@@ -10,6 +10,13 @@ public sealed class ChatMediator : IChatMediator
 {
     private static readonly ConcurrentDictionary<User, IServerStreamWriter<ReceiveMessageResponse>?> Users = new();
 
+    public Task<User> GetUserByNameAsync(string userName)
+    {
+        var user = Users.Keys.First(u => u.UserName == userName);
+
+        return Task.FromResult(user);
+    }
+
     public Task<bool> TryConnectUserAsync(User user)
     {
         var added = Users.TryAdd(user, null);
@@ -19,23 +26,28 @@ public sealed class ChatMediator : IChatMediator
 
     public Task DisconnectUserAsync(User user)
     {
-        Users.Remove(user, out _);
+        Users.TryRemove(user, out _);
         
         return Task.CompletedTask;
     }
 
-    public Task SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter)
+    public Task<bool> SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter)
     {
+        if (Users[user] is null)
+        {
+            return Task.FromResult(false);
+        }
+
         Users[user] = responseWriter;
         
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public Task SaveMessageToUsersAsync(User user, string text)
     {
-        foreach (var internalUser in Users)
+        foreach (var pair in Users)
         {
-            internalUser.Key.ReceiveMessage(user.UserName, text);
+            pair.Key.ReceiveMessage(user, text);
         }
         
         return Task.CompletedTask;
@@ -43,9 +55,9 @@ public sealed class ChatMediator : IChatMediator
 
     public async Task BroadcastMessagesAsync(User user, CancellationToken cancellationToken)
     {
-        var (userWithMessages, streamWriter) = Users.First(pair => pair.Key.Equals(user));
+        var streamWriter = Users[user];
 
-        var messages = userWithMessages.GetMessages();
+        var messages = user.GetMessages();
 
         foreach (var message in messages)
         {

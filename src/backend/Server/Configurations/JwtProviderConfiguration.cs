@@ -1,7 +1,8 @@
 ﻿using Server.Abstractions;
 using Server.Services;
 
-namespace Server.Configurations;
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class JwtProviderConfiguration
 {

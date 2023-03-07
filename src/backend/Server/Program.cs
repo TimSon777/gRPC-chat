@@ -1,7 +1,3 @@
-using Server.Abstractions;
-using Server.Configurations;
-using Server.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;

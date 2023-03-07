@@ -10,9 +10,6 @@
         <Protobuf Include="../../protos/*.proto">
             <GrpcServices>Server</GrpcServices>
         </Protobuf>
-        <Protobuf Update="..\..\protos\auth.proto">
-          <Link>protos\auth.proto</Link>
-        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>

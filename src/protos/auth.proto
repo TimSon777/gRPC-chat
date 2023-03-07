@@ -2,7 +2,7 @@
 
 package auth;
 
-service JwtProviderService {
+service Auth {
   rpc JwtProvider (LoginRequest) returns (LoginResponse);
 }
 

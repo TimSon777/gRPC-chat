@@ -5,7 +5,7 @@ using Server.Mappers;
 
 namespace Server.Services;
 
-public sealed class AuthService
+public sealed class AuthService : Auth.Auth.AuthBase
 {
     private readonly IJwtProvider _jwtProvider;
 

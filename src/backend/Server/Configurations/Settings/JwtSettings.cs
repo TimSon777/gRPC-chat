@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.Configuration;
 

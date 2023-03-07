@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Server.Configurations;
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection;
 
-public static class JwrBearerAuthentication
+public static class JwrBearerAuthenticationConfiguration
 {
     public static IServiceCollection AddJwrBearerAuthentication(this IServiceCollection services,
         JwtSettings jwtSettings)

@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+package auth;
+
+service JwtProviderService {
+  rpc JwtProvider (LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string userName = 1;
+}
+
+message LoginResponse {
+  string accessToken = 1;
+}

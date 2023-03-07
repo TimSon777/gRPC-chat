@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
@@ -14,7 +16,12 @@ var jwtSettings = new JwtSettings();
 jwtConfiguration.Bind(jwtSettings);
 
 services.AddJwrBearerAuthentication(jwtSettings);
-services.AddAuthorization();
+services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 services.AddGrpc();
 services.AddChatMediator();

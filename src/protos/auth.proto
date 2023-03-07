@@ -1,9 +1,9 @@
 ﻿syntax = "proto3";
 
-package auth;
+package proto;
 
 service Auth {
-  rpc JwtProvider (LoginRequest) returns (LoginResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
 }
 
 message LoginRequest {

@@ -1,4 +1,4 @@
-﻿using Auth;
+﻿using Proto;
 using Server.Models;
 
 namespace Server.Mappers;

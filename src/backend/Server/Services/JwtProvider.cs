@@ -22,8 +22,8 @@ public sealed class JwtProvider : IJwtProvider
         var utcNow = DateTime.UtcNow;
 
         var jwt = new JwtSecurityToken(
-            issuer: null,
-            audience: null,
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
             notBefore: utcNow,
             expires: utcNow.AddYears(1),
             claims: new List<Claim>

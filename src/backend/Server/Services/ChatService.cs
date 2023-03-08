@@ -51,13 +51,16 @@ public sealed class ChatService : Chat.ChatBase
 
         try
         {
-            while (true)
+            while (!context.CancellationToken.IsCancellationRequested)
             {
                 await _chatMediator.BroadcastMessagesAsync(user, context.CancellationToken);
                 await Task.Delay(1000);
             }
         }
         catch (OperationCanceledException)
+        {
+        }
+        finally
         {
             await _chatMediator.DisconnectUserAsync(user, responseStream);
         }

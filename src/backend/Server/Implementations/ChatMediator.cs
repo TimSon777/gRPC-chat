@@ -33,7 +33,7 @@ public sealed class ChatMediator : IChatMediator
 
     public Task<bool> SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter)
     {
-        if (Users[user] is null)
+        if (Users[user] is not null)
         {
             return Task.FromResult(false);
         }

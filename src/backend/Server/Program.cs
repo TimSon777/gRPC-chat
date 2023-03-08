@@ -26,8 +26,19 @@ services.AddAuthorization(options =>
 services.AddGrpc();
 services.AddChatMediator();
 services.AddJwtProvider();
+services.AddCors(options => options.AddPolicy("grpc-cors-policy", corsPolicyBuilder =>
+{
+    corsPolicyBuilder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");;
+}));
 
 var app = builder.Build();
+
+app.UseGrpcWeb(); 
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

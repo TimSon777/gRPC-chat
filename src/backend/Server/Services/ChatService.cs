@@ -59,7 +59,7 @@ public sealed class ChatService : Chat.ChatBase
         }
         catch (OperationCanceledException)
         {
-            await _chatMediator.DisconnectUserAsync(user);
+            await _chatMediator.DisconnectUserAsync(user, responseStream);
         }
     }
 }

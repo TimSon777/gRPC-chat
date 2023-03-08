@@ -24,9 +24,14 @@ public sealed class ChatMediator : IChatMediator
         return Task.FromResult(added);
     }
 
-    public Task DisconnectUserAsync(User user)
+    public Task DisconnectUserAsync(User user, IServerStreamWriter<ReceiveMessageResponse> serverStreamWriter)
     {
-        Users.TryRemove(user, out _);
+        Users[user].Remove(serverStreamWriter);
+
+        if (!Users[user].Any())
+        {
+            Users.TryRemove(user, out _);
+        }
         
         return Task.CompletedTask;
     }

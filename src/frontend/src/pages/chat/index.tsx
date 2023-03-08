@@ -51,13 +51,7 @@ export const ChatPage = () => {
 
     useEffect(() => {
         if (client){
-            connect().then(connected => {
-                if (connected) {
-                    receiveMessages();
-                } else {
-                    alert("Pls, logout and use another username");
-                }
-            });
+            connect().then(_ => receiveMessages());
         }
 
     }, [client])

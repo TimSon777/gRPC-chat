@@ -33,6 +33,10 @@ export const ChatPage = () => {
         }
 
         await client!.sendMessage(request, {meta: meta})
+
+        if (inputMessage.current) {
+            inputMessage.current.value = "";
+        }
     };
 
     useEffect(() => {

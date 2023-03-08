@@ -47,12 +47,7 @@ public sealed class ChatService : Chat.ChatBase
         var userName = context.UserName();
         var user = await _chatMediator.GetUserByNameAsync(userName);
 
-        var subscribed = await _chatMediator.SubscribeToReceiveMessages(user, responseStream);
-
-        if (!subscribed)
-        {
-            throw new RpcException(Status.DefaultCancelled);
-        }
+        await _chatMediator.SubscribeToReceiveMessages(user, responseStream);
 
         try
         {

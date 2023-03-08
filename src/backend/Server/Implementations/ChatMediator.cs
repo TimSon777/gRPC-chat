@@ -8,7 +8,7 @@ namespace Server.Implementations;
 
 public sealed class ChatMediator : IChatMediator
 {
-    private static readonly ConcurrentDictionary<User, IServerStreamWriter<ReceiveMessageResponse>?> Users = new();
+    private static readonly ConcurrentDictionary<User, List<IServerStreamWriter<ReceiveMessageResponse>>> Users = new();
 
     public Task<User> GetUserByNameAsync(string userName)
     {
@@ -19,7 +19,7 @@ public sealed class ChatMediator : IChatMediator
 
     public Task<bool> TryConnectUserAsync(User user)
     {
-        var added = Users.TryAdd(user, null);
+        var added = Users.TryAdd(user, new List<IServerStreamWriter<ReceiveMessageResponse>>());
 
         return Task.FromResult(added);
     }
@@ -31,14 +31,9 @@ public sealed class ChatMediator : IChatMediator
         return Task.CompletedTask;
     }
 
-    public Task<bool> SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter)
+    public Task SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter)
     {
-        if (Users[user] is not null)
-        {
-            return Task.FromResult(false);
-        }
-
-        Users[user] = responseWriter;
+        Users[user].Add(responseWriter);
         
         return Task.FromResult(true);
     }
@@ -55,7 +50,7 @@ public sealed class ChatMediator : IChatMediator
 
     public async Task BroadcastMessagesAsync(User user, CancellationToken cancellationToken)
     {
-        var streamWriter = Users[user];
+        var streamWriters = Users[user];
 
         var messages = user.GetMessages();
 
@@ -67,7 +62,7 @@ public sealed class ChatMediator : IChatMediator
                 Text = message.Text
             };
 
-            if (streamWriter is not null)
+            foreach (var streamWriter in streamWriters)
             {
                 await streamWriter.WriteAsync(response, cancellationToken);
             }

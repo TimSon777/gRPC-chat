@@ -9,7 +9,7 @@ public interface IChatMediator
     Task<User> GetUserByNameAsync(string userName);
     Task<bool> TryConnectUserAsync(User user);
     Task DisconnectUserAsync(User user);
-    Task<bool> SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter);
+    Task SubscribeToReceiveMessages(User user, IServerStreamWriter<ReceiveMessageResponse> responseWriter);
     Task SaveMessageToUsersAsync(User user, string text);
     Task BroadcastMessagesAsync(User user, CancellationToken cancellationToken);
 }

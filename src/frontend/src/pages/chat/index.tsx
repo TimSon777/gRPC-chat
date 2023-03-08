@@ -15,7 +15,7 @@ export const ChatPage = () => {
     }
 
     const connect = async () => {
-        const response = await client!.connect(Empty, {meta: meta});
+        return await client!.connect(Empty, {meta: meta});
     }
 
     const receiveMessages = async () => {
@@ -33,6 +33,10 @@ export const ChatPage = () => {
         }
 
         await client!.sendMessage(request, {meta: meta})
+
+        if (inputMessage.current) {
+            inputMessage.current.value = "";
+        }
     };
 
     useEffect(() => {
@@ -47,7 +51,13 @@ export const ChatPage = () => {
 
     useEffect(() => {
         if (client){
-            connect().then(_ => receiveMessages());
+            connect().then(connected => {
+                if (connected) {
+                    receiveMessages();
+                } else {
+                    alert("Pls, logout and use another username");
+                }
+            });
         }
 
     }, [client])

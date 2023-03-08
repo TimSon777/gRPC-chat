@@ -1,9 +1,9 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
-import {useState, useEffect, FormEventHandler, useRef} from "react";
+import {useState, useEffect, useRef} from "react";
 import { ReceiveMessageResponse } from "../../generated/chat";
 import { ChatClient } from "../../generated/chat.client";
 import { Empty } from "../../generated/google/protobuf/empty";
-import {getToken, useLogin } from "../../services/accounting";
+import {getToken} from "../../services/accounting";
 
 export const ChatPage = () => {
     const [client, setClient] = useState<ChatClient>();
@@ -13,7 +13,7 @@ export const ChatPage = () => {
     const meta = {
         Authorization: `Bearer ${getToken()}`
     }
-    
+
     const connect = async () => {
         const response = await client!.connect(Empty, {meta: meta});
     }

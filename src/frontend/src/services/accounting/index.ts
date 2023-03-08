@@ -10,12 +10,10 @@ export const useLogout = () => {
     navigator("/login");
 }
 
-export const useLogin = (token : string) => {
-    localStorage.setItem("access_token", token);
-    const navigator = useNavigate();
-    navigator("/chat");
-}
-
 export const getToken = () => {
     return localStorage.getItem("access_token");
+}
+
+export const setToken = (token: string) => {
+  localStorage.setItem("access_token", token);
 }

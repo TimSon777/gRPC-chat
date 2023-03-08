@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Abstractions;
 using Server.Models;
 
-namespace Server.Services;
+namespace Server.Implementations;
 
 public sealed class JwtProvider : IJwtProvider
 {
